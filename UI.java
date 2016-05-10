@@ -4,7 +4,10 @@ import java.awt.event.*;
 
 class UI {
     private JFrame frame;
-    private final String FONT_STYLE = "Arial"; 
+    private final String FONT_STYLE = "Arial";
+    private State state = new State(); 
+    private int playerMoving = 0;
+    private int player;
     
     public UI() {
         initialize();
@@ -15,8 +18,7 @@ class UI {
         
         frame.setPreferredSize(new Dimension(600,600));
         
-        
-        this.renderLose();
+        this.renderStart();
         
         frame.pack();
         frame.setVisible(true);
@@ -35,10 +37,26 @@ class UI {
         player1Pick.setMargin(new Insets(5, 200, 5, 200));
         player1Pick.setFont(new Font(this.FONT_STYLE, Font.PLAIN, 25));
         
+        player1Pick.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                player = 0;
+                
+                renderGame();
+            }
+        });
+        
         JButton player2Pick = new JButton("Player 2");
         player2Pick.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         player2Pick.setMargin(new Insets(5, 200, 5, 200));
         player2Pick.setFont(new Font(this.FONT_STYLE, Font.PLAIN, 25));
+        
+        player2Pick.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                player = 1;
+                
+                renderGame();
+            }
+        });
         
         frame.add(Box.createVerticalGlue());        
         frame.add(chooseLabel);        
@@ -49,6 +67,146 @@ class UI {
         frame.add(Box.createVerticalGlue());
         
         frame.pack();
+    }
+    
+    private void renderGame() {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().setLayout(new BorderLayout());
+        
+        JPanel northPanel = new JPanel();
+        northPanel.add(new JLabel("Info"));
+        
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new GridLayout(3, 3));
+        
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                String message = "";
+                
+                if(this.state.getBoardState()[i][j] == 0) {
+                    message = "O";
+                }
+                else if(this.state.getBoardState()[i][j] == 1) {
+                    message = "X";
+                }
+                
+                JButton button = new JButton(message);
+                
+                final int x = i, y = j;
+                
+                button.addActionListener(new ActionListener(){
+                    public void actionPerformed(ActionEvent e){
+                        if(state.getBoardState()[x][y] == -1) {
+                            state.playerMove(x, y, playerMoving);
+                        
+                            playerMoving = playerMoving == 0? 1: 0;
+                            
+                            if(checkWin() == player) {
+                                renderWin();
+                                return;
+                            }
+                            else if(checkWin() == (player == 0? 1: 0)) {
+                                renderLose();
+                                return;
+                            }
+                            
+                            renderGame();
+                        }
+                    }
+                });
+                
+                centerPanel.add(button);
+            }
+        }
+        
+        JPanel southPanel = new JPanel();
+        
+        southPanel.add(new JLabel("Info"));
+        
+        frame.add(northPanel, BorderLayout.NORTH);
+        frame.add(centerPanel, BorderLayout.CENTER);
+        frame.add(southPanel, BorderLayout.SOUTH);
+        
+        frame.pack();
+    }
+    
+    private int checkWin() {
+        // check left
+        for(int i = 0; i < 3; i++) {
+            int current = this.state.getBoardState()[i][0];
+            
+            if(current == -1) continue;
+            
+            boolean flag = true;
+            
+            for(int j = 1; j < 3; j++) {
+                if(current != this.state.getBoardState()[i][j]) {
+                    flag = false;
+                    break;
+                }
+            }
+            
+            if(flag) {
+                return current;
+            }
+        }
+        
+        // check down
+        for(int i = 0; i < 3; i++) {
+            int current = this.state.getBoardState()[0][i];
+            
+            if(current == -1) continue;
+            
+            boolean flag = true;
+            
+            for(int j = 1; j < 3; j++) {
+                if(current != this.state.getBoardState()[j][i]) {
+                    flag = false;
+                    break;
+                }
+            }
+            
+            if(flag) {
+                return current;
+            }
+        }
+        
+        // check diagonal
+        int current = this.state.getBoardState()[0][0];
+            
+        if(current != -1) {
+            boolean flag = true;
+        
+            for(int j = 1; j < 3; j++) {
+                if(current != this.state.getBoardState()[j][j]) {
+                    flag = false;
+                    break;
+                }
+            }
+            
+            if(flag) {
+                return current;
+            }
+        }
+        
+        current = this.state.getBoardState()[2][0];
+            
+        if(current != -1) {
+            boolean flag = true;
+        
+            for(int j = 1; j > -1; j--) {
+                if(current != this.state.getBoardState()[j][j - 2]) {
+                    flag = false;
+                    break;
+                }
+            }
+            
+            if(flag) {
+                return current;
+            }
+        }
+        
+        return -1;
     }
     
     private void renderWin() {
@@ -91,6 +249,8 @@ class UI {
         playAgainButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         playAgainButton.setMargin(new Insets(5, 200, 5, 200));
         playAgainButton.setFont(new Font(this.FONT_STYLE, Font.PLAIN, 25));
+        
+        
         
         frame.add(Box.createVerticalGlue());        
         frame.add(drawLabel);        
