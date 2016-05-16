@@ -101,11 +101,17 @@ class UI {
                         
                             playerMoving = playerMoving == 0? 1: 0;
                             
-                            if(checkWin() == player) {
+                            int gameState = checkWin();
+                            
+                            if(gameState == player) {
                                 renderWin();
                                 return;
                             }
-                            else if(checkWin() == (player == 0? 1: 0)) {
+                            else if(gameState == 3) {
+                                renderDraw();
+                                return;
+                            }
+                            else if(gameState == (player == 0? 1: 0)) {
                                 renderLose();
                                 return;
                             }
@@ -194,8 +200,8 @@ class UI {
         if(current != -1) {
             boolean flag = true;
         
-            for(int j = 1; j > -1; j--) {
-                if(current != this.state.getBoardState()[j][j - 2]) {
+            for(int j = 0; j < 2; j++) {
+                if(current != this.state.getBoardState()[j][2 - j]) {
                     flag = false;
                     break;
                 }
@@ -206,7 +212,18 @@ class UI {
             }
         }
         
-        return -1;
+        // check for draw
+        boolean isDraw = true;
+        
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                if(this.state.getBoardState()[i][j] == -1) {
+                    isDraw = false;
+                }
+            }
+        }
+        
+        return isDraw? 3: -1;
     }
     
     private void renderWin() {
@@ -225,6 +242,13 @@ class UI {
         playAgainButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         playAgainButton.setMargin(new Insets(5, 200, 5, 200));
         playAgainButton.setFont(new Font(this.FONT_STYLE, Font.PLAIN, 25));
+        
+        playAgainButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                state.reset();
+                renderStart();
+            }
+        });
         
         frame.add(Box.createVerticalGlue());        
         frame.add(winLabel);        
@@ -249,9 +273,13 @@ class UI {
         playAgainButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         playAgainButton.setMargin(new Insets(5, 200, 5, 200));
         playAgainButton.setFont(new Font(this.FONT_STYLE, Font.PLAIN, 25));
-        
-        
-        
+        playAgainButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                state.reset();
+                renderStart();
+            }
+        });
+                
         frame.add(Box.createVerticalGlue());        
         frame.add(drawLabel);        
         frame.add(Box.createRigidArea(new Dimension(0,40)));        
@@ -273,6 +301,12 @@ class UI {
         playAgainButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         playAgainButton.setMargin(new Insets(5, 200, 5, 200));
         playAgainButton.setFont(new Font(this.FONT_STYLE, Font.PLAIN, 25));
+        playAgainButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                state.reset();
+                renderStart();
+            }
+        });
         
         frame.add(Box.createVerticalGlue());        
         frame.add(loseLabel);        
