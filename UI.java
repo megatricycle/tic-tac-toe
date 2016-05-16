@@ -8,6 +8,7 @@ class UI {
     private State state = new State(); 
     private int playerMoving = 0;
     private int player;
+    private int ai;
     
     public UI() {
         initialize();
@@ -22,6 +23,19 @@ class UI {
         
         frame.pack();
         frame.setVisible(true);
+    }
+    
+    // @TODO: AI Algorithm
+    private Coordinates getBestMove() {
+        for(int i = 0; i < 3; i++) {
+            for(int j = 0; j < 3; j++) {
+                if(this.state.getBoardState()[i][j] == -1) {
+                    return new Coordinates(i, j);
+                }
+            }
+        }
+        
+        return new Coordinates(0, 0);
     }
     
     private void renderStart() {
@@ -40,6 +54,7 @@ class UI {
         player1Pick.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 player = 0;
+                ai = 1;
                 
                 renderGame();
             }
@@ -53,6 +68,12 @@ class UI {
         player2Pick.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 player = 1;
+                ai = 0;
+                
+                // AI first turn
+                Coordinates aiMove = getBestMove();
+                            
+                state.playerMove(aiMove.getX(), aiMove.getY(), ai);
                 
                 renderGame();
             }
@@ -97,11 +118,29 @@ class UI {
                 button.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e){
                         if(state.getBoardState()[x][y] == -1) {
-                            state.playerMove(x, y, playerMoving);
-                        
-                            playerMoving = playerMoving == 0? 1: 0;
+                            state.playerMove(x, y, player);
                             
                             int gameState = checkWin();
+                            
+                            if(gameState == player) {
+                                renderWin();
+                                return;
+                            }
+                            else if(gameState == 3) {
+                                renderDraw();
+                                return;
+                            }
+                            else if(gameState == (player == 0? 1: 0)) {
+                                renderLose();
+                                return;
+                            }
+                            
+                            // AI
+                            Coordinates aiMove = getBestMove();
+                            
+                            state.playerMove(aiMove.getX(), aiMove.getY(), ai);
+                            
+                            gameState = checkWin();
                             
                             if(gameState == player) {
                                 renderWin();
