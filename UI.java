@@ -73,9 +73,7 @@ class UI {
                 ai = 0;
                 
                 // AI first turn
-                Coordinates aiMove = getBestMove();
-                            
-                state.playerMove(aiMove.getX(), aiMove.getY(), ai);
+                state.playerMove(1, 1, ai);
                 
                 renderGame();
             }
@@ -124,7 +122,7 @@ class UI {
                         if(state.getBoardState()[x][y] == -1) {
                             state.playerMove(x, y, player);
                             
-                            int gameState = checkWin();
+                            int gameState = checkWin(state);
                             
                             if(gameState == player) {
                                 renderWin();
@@ -144,7 +142,9 @@ class UI {
                             
                             state.playerMove(aiMove.getX(), aiMove.getY(), ai);
                             
-                            gameState = checkWin();
+                            System.out.println(state.getPossibleMoves(ai));
+                            
+                            gameState = checkWin(state);
                             
                             if(gameState == player) {
                                 renderWin();
@@ -179,17 +179,17 @@ class UI {
         frame.pack();
     }
     
-    private int checkWin() {
+    private int checkWin(State state) {
         // check left
         for(int i = 0; i < 3; i++) {
-            int current = this.state.getBoardState()[i][0];
+            int current = state.getBoardState()[i][0];
             
             if(current == -1) continue;
             
             boolean flag = true;
             
             for(int j = 1; j < 3; j++) {
-                if(current != this.state.getBoardState()[i][j]) {
+                if(current != state.getBoardState()[i][j]) {
                     flag = false;
                     break;
                 }
@@ -202,14 +202,14 @@ class UI {
         
         // check down
         for(int i = 0; i < 3; i++) {
-            int current = this.state.getBoardState()[0][i];
+            int current = state.getBoardState()[0][i];
             
             if(current == -1) continue;
             
             boolean flag = true;
             
             for(int j = 1; j < 3; j++) {
-                if(current != this.state.getBoardState()[j][i]) {
+                if(current != state.getBoardState()[j][i]) {
                     flag = false;
                     break;
                 }
@@ -221,13 +221,13 @@ class UI {
         }
         
         // check diagonal
-        int current = this.state.getBoardState()[0][0];
+        int current = state.getBoardState()[0][0];
             
         if(current != -1) {
             boolean flag = true;
         
             for(int j = 1; j < 3; j++) {
-                if(current != this.state.getBoardState()[j][j]) {
+                if(current != state.getBoardState()[j][j]) {
                     flag = false;
                     break;
                 }
@@ -238,13 +238,13 @@ class UI {
             }
         }
         
-        current = this.state.getBoardState()[2][0];
+        current = state.getBoardState()[2][0];
             
         if(current != -1) {
             boolean flag = true;
         
             for(int j = 0; j < 2; j++) {
-                if(current != this.state.getBoardState()[j][2 - j]) {
+                if(current != state.getBoardState()[j][2 - j]) {
                     flag = false;
                     break;
                 }
@@ -260,7 +260,7 @@ class UI {
         
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 3; j++) {
-                if(this.state.getBoardState()[i][j] == -1) {
+                if(state.getBoardState()[i][j] == -1) {
                     isDraw = false;
                 }
             }
