@@ -41,6 +41,8 @@ class UI {
     private void renderStart() {
         frame.getContentPane().removeAll();
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+        frame.revalidate();
+        frame.repaint();
         
         JLabel chooseLabel = new JLabel("Play as:");
         chooseLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
@@ -93,6 +95,8 @@ class UI {
     private void renderGame() {
         frame.getContentPane().removeAll();
         frame.getContentPane().setLayout(new BorderLayout());
+        frame.revalidate();
+        frame.repaint();
         
         JPanel northPanel = new JPanel();
         northPanel.add(new JLabel("Info"));
@@ -268,6 +272,8 @@ class UI {
     private void renderWin() {
         frame.getContentPane().removeAll();
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+        frame.revalidate();
+        frame.repaint();
         
         JLabel winLabel = new JLabel("You win!");
         winLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
@@ -303,6 +309,8 @@ class UI {
     private void renderDraw() {
         frame.getContentPane().removeAll();
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+        frame.revalidate();
+        frame.repaint();
         
         JLabel drawLabel = new JLabel("It's a draw!");
         drawLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
@@ -331,6 +339,8 @@ class UI {
     private void renderLose() {
         frame.getContentPane().removeAll();
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
+        frame.revalidate();
+        frame.repaint();
         
         JLabel loseLabel = new JLabel("You lose!");
         loseLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
