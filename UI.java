@@ -142,8 +142,6 @@ class UI {
                             
                             state.playerMove(aiMove.getX(), aiMove.getY(), ai);
                             
-                            System.out.println(state.getPossibleMoves(ai));
-                            
                             gameState = checkWin(state);
                             
                             if(gameState == player) {
