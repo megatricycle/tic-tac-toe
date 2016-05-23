@@ -15,11 +15,26 @@ public class TicTacToeAI {
     }
 
     public Coordinates getAImove(){
+        // check corners
+        if(this.state[1][0] == 2 && this.state[2][1] == 2 && this.state[2][0] == 0) {
+            return new Coordinates(2, 0);
+        }
+        else if(this.state[1][0] == 2 && this.state[0][1] == 2 && this.state[0][0] == 0) {
+            return new Coordinates(0, 0);
+        }
+        else if(this.state[1][2] == 2 && this.state[0][1] == 2 && this.state[0][2] == 0) {
+            return new Coordinates(0, 2);
+        }
+        else if(this.state[1][2] == 2 && this.state[2][1] == 2 && this.state[2][2] == 0) {
+            return new Coordinates(2, 2);
+        }
+        
+        // do normal minmax
         alphaBetaMinimax(this.state, true, Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
         return bestMove(movesList);//Returns the coordinate of the best move.
     }
     
-    public Coordinates bestMove(List<PointsUtility> movesToWin){
+    private Coordinates bestMove(List<PointsUtility> movesToWin){
         int maxUtility = Integer.MIN_VALUE;
         Coordinates bestCoordinate = new Coordinates(0,0);
         for(PointsUtility move: movesToWin){
@@ -31,8 +46,8 @@ public class TicTacToeAI {
         return bestCoordinate;
     }
 
-    public int alphaBetaMinimax(int[][] currentState, boolean isAI, int alpha, int beta, int depth){
-        if(beta<=alpha){ System.out.println("Pruning at depth = "+depth);if(isAI) return Integer.MAX_VALUE; else return Integer.MIN_VALUE; }
+    private int alphaBetaMinimax(int[][] currentState, boolean isAI, int alpha, int beta, int depth){
+        if(beta<=alpha){ if(isAI) return Integer.MAX_VALUE; else return Integer.MIN_VALUE; }
         if(isGameOver(currentState) || depth == depthCut) return evaluateBoard(currentState);
         
         if(isDraw(currentState)) return 0;
@@ -62,7 +77,7 @@ public class TicTacToeAI {
 
     }
 
-    public Coordinates getPoints(int[][] currentState, int[][] childState){
+    private Coordinates getPoints(int[][] currentState, int[][] childState){
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
                 if(currentState[i][j]!=childState[i][j]){
@@ -73,7 +88,7 @@ public class TicTacToeAI {
         return new Coordinates(0,0);
     }
 
-    public List<int [][]> getNextStates(int[][] currentState, boolean isAI){
+    private List<int [][]> getNextStates(int[][] currentState, boolean isAI){
         List<int[][]> nextStates = new ArrayList<int[][]>();
         int player = 2;
         if(isAI) player = 1;
@@ -83,7 +98,7 @@ public class TicTacToeAI {
         return nextStates;
     }
 
-    public List<Coordinates> getPossibleMoves(int[][] currentState){
+    private List<Coordinates> getPossibleMoves(int[][] currentState){
         List<Coordinates> points = new ArrayList<>();
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
@@ -93,7 +108,7 @@ public class TicTacToeAI {
         return points;
     }
 
-    public int[][] getNewState(Coordinates point, int player, int[][] currentState){
+    private int[][] getNewState(Coordinates point, int player, int[][] currentState){
         int[][] newState = new int[3][3];
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
@@ -104,7 +119,7 @@ public class TicTacToeAI {
         return newState;
     }
 
-    public PointsUtility convertToMove(int[][] currentState, int[][] nextState, int utility){
+    private PointsUtility convertToMove(int[][] currentState, int[][] nextState, int utility){
         Coordinates winningCoordinate = new Coordinates(0,0);
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
@@ -116,7 +131,7 @@ public class TicTacToeAI {
         return new PointsUtility(winningCoordinate, utility);
     }
 
-    public int changeInUtility(int X, int O){
+    private int changeInUtility(int X, int O){
         if(X == 3)
             return 100;
         else if(X == 2 && O == 0)
@@ -133,7 +148,7 @@ public class TicTacToeAI {
             return 0;
     }
 
-    public int evaluateBoard(int[][] currentState){
+    private int evaluateBoard(int[][] currentState){
         int evaluateBoard = 0;
         int X = 0;
         int O = 0;
@@ -186,11 +201,11 @@ public class TicTacToeAI {
         return evaluateBoard;        
     }
     
-    public boolean isGameOver(int[][] state){
+    private boolean isGameOver(int[][] state){
         return (this.winnerAI(state) || this.winnerUser(state));
     }
 
-    public boolean isDraw(int[][] state){
+    private boolean isDraw(int[][] state){
         for(int i = 0; i < 3; i++){
             for(int j = 0; j < 3; j++){
                 if(state[i][j]==0){
@@ -201,7 +216,7 @@ public class TicTacToeAI {
         return true;
     }
 
-    public boolean winnerAI(int[][] state){
+    private boolean winnerAI(int[][] state){
         if ((state[0][0] == state[1][1] && state[0][0] == state[2][2] && state[0][0] == 1) 
             || (state[0][2] == state[1][1] && state[0][2] == state[2][0] && state[0][2] == 1)) {
             return true;
@@ -215,7 +230,7 @@ public class TicTacToeAI {
         return false;
     }
 
-    public boolean winnerUser(int[][] state){
+    private boolean winnerUser(int[][] state){
         if ((state[0][0] == state[1][1] && state[0][0] == state[2][2] && state[0][0] == 2) 
             || (state[0][2] == state[1][1] && state[0][2] == state[2][0] && state[0][2] == 2)) {
             return true;
