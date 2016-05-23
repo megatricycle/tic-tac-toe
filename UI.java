@@ -37,14 +37,19 @@ class UI {
         frame.revalidate();
         frame.repaint();
         
+        frame.getContentPane().setBackground(new Color(21, 21, 21));
+        
         JLabel chooseLabel = new JLabel("Play as:");
         chooseLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         chooseLabel.setFont(new Font(this.FONT_STYLE, Font.BOLD, 30));
+        chooseLabel.setForeground(new Color(200, 200, 200));
         
         JButton player1Pick = new JButton("Player 1");
         player1Pick.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         player1Pick.setMargin(new Insets(5, 200, 5, 200));
         player1Pick.setFont(new Font(this.FONT_STYLE, Font.PLAIN, 25));
+        player1Pick.setBackground(new Color(21, 21, 21));
+        player1Pick.setForeground(new Color(200, 200, 200));
         
         player1Pick.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -59,6 +64,8 @@ class UI {
         player2Pick.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         player2Pick.setMargin(new Insets(5, 200, 5, 200));
         player2Pick.setFont(new Font(this.FONT_STYLE, Font.PLAIN, 25));
+        player2Pick.setBackground(new Color(21, 21, 21));
+        player2Pick.setForeground(new Color(200, 200, 200));
         
         player2Pick.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
@@ -66,7 +73,9 @@ class UI {
                 ai = 1; 
                 
                 // AI first turn
-                state.playerMove(1, 1, ai);
+                Coordinates aiMove = getBestMove();
+                
+                state.playerMove(aiMove.getX(), aiMove.getY(), ai);
                 
                 renderGame();
             }
@@ -94,16 +103,20 @@ class UI {
         
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 3; j++) {
-                String message = "";
+                // String message = "";
+                ImageIcon img = null;
                 
                 if(this.state.getBoardState()[i][j] == 1) {
-                    message = "O";
+                    img = new ImageIcon("o.jpg");
                 }
                 else if(this.state.getBoardState()[i][j] == 2) {
-                    message = "X";
+                    img = new ImageIcon("x.jpg");
+                }
+                else {
+                    img = new ImageIcon("empty.jpg");
                 }
                 
-                JButton button = new JButton(message);
+                JButton button = new JButton(img);
                 
                 final int x = i, y = j;
                 
@@ -157,8 +170,19 @@ class UI {
         }
         
         JPanel southPanel = new JPanel();
+        southPanel.setBackground(new Color(21, 21, 21));
         
-        southPanel.add(new JButton("Restart"));
+        JButton restartButton = new JButton("Restart");
+        restartButton.setBackground(new Color(21, 21, 21));
+        restartButton.setForeground(new Color(200, 200, 200));
+        restartButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+                state.reset();
+                renderStart();
+            }
+        });        
+         
+        southPanel.add(restartButton);
         
         frame.add(centerPanel, BorderLayout.CENTER);
         frame.add(southPanel, BorderLayout.SOUTH);
@@ -265,16 +289,19 @@ class UI {
         JLabel winLabel = new JLabel("You win!");
         winLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         winLabel.setFont(new Font(this.FONT_STYLE, Font.BOLD, 30));
+        winLabel.setForeground(new Color(200, 200, 200));
         
         JLabel wrongLabel = new JLabel("There's something wrong with your algorithm. ;)");
         wrongLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         wrongLabel.setFont(new Font(this.FONT_STYLE, Font.PLAIN, 15));
+        wrongLabel.setForeground(new Color(200, 200, 200));
         
         JButton playAgainButton = new JButton("Play Again");
         playAgainButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         playAgainButton.setMargin(new Insets(5, 200, 5, 200));
         playAgainButton.setFont(new Font(this.FONT_STYLE, Font.PLAIN, 25));
-        
+        playAgainButton.setBackground(new Color(21, 21, 21));
+        playAgainButton.setForeground(new Color(200, 200, 200));
         playAgainButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 state.reset();
@@ -302,11 +329,14 @@ class UI {
         JLabel drawLabel = new JLabel("It's a draw!");
         drawLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         drawLabel.setFont(new Font(this.FONT_STYLE, Font.BOLD, 30));
+        drawLabel.setForeground(new Color(200, 200, 200));
         
         JButton playAgainButton = new JButton("Play Again");
         playAgainButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         playAgainButton.setMargin(new Insets(5, 200, 5, 200));
         playAgainButton.setFont(new Font(this.FONT_STYLE, Font.PLAIN, 25));
+        playAgainButton.setBackground(new Color(21, 21, 21));
+        playAgainButton.setForeground(new Color(200, 200, 200));
         playAgainButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 state.reset();
@@ -332,11 +362,14 @@ class UI {
         JLabel loseLabel = new JLabel("You lose!");
         loseLabel.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         loseLabel.setFont(new Font(this.FONT_STYLE, Font.BOLD, 30));
+        loseLabel.setForeground(new Color(200, 200, 200));
         
         JButton playAgainButton = new JButton("Play Again");
         playAgainButton.setAlignmentX(JComponent.CENTER_ALIGNMENT);
         playAgainButton.setMargin(new Insets(5, 200, 5, 200));
         playAgainButton.setFont(new Font(this.FONT_STYLE, Font.PLAIN, 25));
+        playAgainButton.setBackground(new Color(21, 21, 21));
+        playAgainButton.setForeground(new Color(200, 200, 200));
         playAgainButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
                 state.reset();
