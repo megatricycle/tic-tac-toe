@@ -30,12 +30,12 @@ public class TicTacToe {
             state.printBoardState();
             if (state.isGameOver()) break;
             
-            TicTacToeAI solver = new TicTacToeAI(state);
+            TicTacToeAI solver = new TicTacToeAI(state.getBoardState());
             Coordinates move = solver.getAImove();
             state.playerMove(move.getX(), move.getY(), 1);
             //Solver solver = new Solver(state.getBoardState());
-            // Coordinate move = solver.solve();
-            // state.playerMove(move.x, move.y, 1);
+            // Coordinate move = solver.getAImove();
+            // state.playerMove(move.x, move.y, 2);
             state.printBoardState();
         }
         if (state.winnerAI()) {
