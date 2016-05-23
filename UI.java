@@ -25,17 +25,10 @@ class UI {
         frame.setVisible(true);
     }
     
-    // @TODO: AI Algorithm
     private Coordinates getBestMove() {
-        for(int i = 0; i < 3; i++) {
-            for(int j = 0; j < 3; j++) {
-                if(this.state.getBoardState()[i][j] == -1) {
-                    return new Coordinates(i, j);
-                }
-            }
-        }
+        TicTacToeAI solver = new TicTacToeAI(this.state.getBoardState());
         
-        return new Coordinates(0, 0);
+        return solver.getAImove();
     }
     
     private void renderStart() {
@@ -55,7 +48,7 @@ class UI {
         
         player1Pick.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                player = 0;
+                player = 2;
                 ai = 1;
                 
                 renderGame();
@@ -69,8 +62,8 @@ class UI {
         
         player2Pick.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-                player = 1;
-                ai = 0;
+                player = 2;
+                ai = 1; 
                 
                 // AI first turn
                 state.playerMove(1, 1, ai);
@@ -96,9 +89,6 @@ class UI {
         frame.revalidate();
         frame.repaint();
         
-        JPanel northPanel = new JPanel();
-        northPanel.add(new JLabel("Info"));
-        
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new GridLayout(3, 3));
         
@@ -106,10 +96,10 @@ class UI {
             for(int j = 0; j < 3; j++) {
                 String message = "";
                 
-                if(this.state.getBoardState()[i][j] == 0) {
+                if(this.state.getBoardState()[i][j] == 1) {
                     message = "O";
                 }
-                else if(this.state.getBoardState()[i][j] == 1) {
+                else if(this.state.getBoardState()[i][j] == 2) {
                     message = "X";
                 }
                 
@@ -119,7 +109,7 @@ class UI {
                 
                 button.addActionListener(new ActionListener(){
                     public void actionPerformed(ActionEvent e){
-                        if(state.getBoardState()[x][y] == -1) {
+                        if(state.getBoardState()[x][y] == 0) {
                             state.playerMove(x, y, player);
                             
                             int gameState = checkWin(state);
@@ -132,7 +122,7 @@ class UI {
                                 renderDraw();
                                 return;
                             }
-                            else if(gameState == (player == 0? 1: 0)) {
+                            else if(gameState == (player == 1? 2: 1)) {
                                 renderLose();
                                 return;
                             }
@@ -152,7 +142,7 @@ class UI {
                                 renderDraw();
                                 return;
                             }
-                            else if(gameState == (player == 0? 1: 0)) {
+                            else if(gameState == (player == 1? 2: 1)) {
                                 renderLose();
                                 return;
                             }
@@ -168,9 +158,8 @@ class UI {
         
         JPanel southPanel = new JPanel();
         
-        southPanel.add(new JLabel("Info"));
+        southPanel.add(new JButton("Restart"));
         
-        frame.add(northPanel, BorderLayout.NORTH);
         frame.add(centerPanel, BorderLayout.CENTER);
         frame.add(southPanel, BorderLayout.SOUTH);
         
@@ -182,7 +171,7 @@ class UI {
         for(int i = 0; i < 3; i++) {
             int current = state.getBoardState()[i][0];
             
-            if(current == -1) continue;
+            if(current == 0) continue;
             
             boolean flag = true;
             
@@ -202,7 +191,7 @@ class UI {
         for(int i = 0; i < 3; i++) {
             int current = state.getBoardState()[0][i];
             
-            if(current == -1) continue;
+            if(current == 0) continue;
             
             boolean flag = true;
             
@@ -221,7 +210,7 @@ class UI {
         // check diagonal
         int current = state.getBoardState()[0][0];
             
-        if(current != -1) {
+        if(current != 0) {
             boolean flag = true;
         
             for(int j = 1; j < 3; j++) {
@@ -238,7 +227,7 @@ class UI {
         
         current = state.getBoardState()[2][0];
             
-        if(current != -1) {
+        if(current != 0) {
             boolean flag = true;
         
             for(int j = 0; j < 2; j++) {
@@ -258,13 +247,13 @@ class UI {
         
         for(int i = 0; i < 3; i++) {
             for(int j = 0; j < 3; j++) {
-                if(state.getBoardState()[i][j] == -1) {
+                if(state.getBoardState()[i][j] == 0) {
                     isDraw = false;
                 }
             }
         }
         
-        return isDraw? 3: -1;
+        return isDraw? 3: 0;
     }
     
     private void renderWin() {
