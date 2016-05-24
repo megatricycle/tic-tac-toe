@@ -4,7 +4,7 @@ import java.util.List;
 public class TicTacToeAI {
     int[][] state = new int[3][3];
     List<PointsUtility> movesList = new ArrayList<PointsUtility>();
-    int depthCut = 3;
+    int depthCut = 5;
     
     public TicTacToeAI(int[][] state){
         for(int i = 0; i < 3; i++){
@@ -15,20 +15,6 @@ public class TicTacToeAI {
     }
 
     public Coordinates getAImove(){
-        // check corners
-        if(this.state[1][0] == 2 && this.state[2][1] == 2 && this.state[2][0] == 0) {
-            return new Coordinates(2, 0);
-        }
-        else if(this.state[1][0] == 2 && this.state[0][1] == 2 && this.state[0][0] == 0) {
-            return new Coordinates(0, 0);
-        }
-        else if(this.state[1][2] == 2 && this.state[0][1] == 2 && this.state[0][2] == 0) {
-            return new Coordinates(0, 2);
-        }
-        else if(this.state[1][2] == 2 && this.state[2][1] == 2 && this.state[2][2] == 0) {
-            return new Coordinates(2, 2);
-        }
-        
         // do normal minmax
         alphaBetaMinimax(this.state, true, Integer.MIN_VALUE, Integer.MAX_VALUE, 0);
         return bestMove(movesList);//Returns the coordinate of the best move.
